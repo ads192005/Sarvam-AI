@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sarvam AI Avatar Tutor - Multilingual Visual Educator</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- KaTeX for crisp mathematical formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <!-- Mermaid.js for dynamic diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+  </script>
+
+  <!-- Canvas Confetti for quiz celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-md sticky top-0 z-30 px-4 py-2.5">
+    <div class="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-sky-500 to-amber-400 p-0.5 shadow-lg shadow-indigo-500/20">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-xl">
+            🎓
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-base tracking-tight bg-gradient-to-r from-indigo-400 via-sky-300 to-amber-200 bg-clip-text text-transparent">
+              Sarvam AI Avatar Tutor
+            </h1>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              Indic Sovereign AI
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400">
+            Lifelike Avatars • Expressive Indic Voice • Interactive Whiteboard • Socratic Learning
+          </p>
+        </div>
+      </div>
+
+      <!-- Controls: Persona, Language, Status, Settings -->
+      <div class="flex items-center flex-wrap gap-2.5">
+        
+        <!-- Persona Selector -->
+        <div class="flex items-center gap-1.5 bg-slate-800/80 border border-slate-700/80 px-2.5 py-1 rounded-xl text-xs">
+          <span class="text-slate-400">Tutor:</span>
+          <select id="personaSelect" class="bg-transparent text-slate-200 font-medium focus:outline-none cursor-pointer">
+            <option value="priya" class="bg-slate-900 text-slate-100">Prof. Priya (Science/Physics - Voice: Meera)</option>
+            <option value="aryan" class="bg-slate-900 text-slate-100">Dr. Aryan (AI & Tech - Voice: Amartya)</option>
+            <option value="anushka" class="bg-slate-900 text-slate-100">Tutor Anushka (Mathematics - Voice: Anushka)</option>
+            <option value="shubh" class="bg-slate-900 text-slate-100">Mentor Shubh (History - Voice: Shubh)</option>
+          </select>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="flex items-center gap-1.5 bg-slate-800/80 border border-slate-700/80 px-2.5 py-1 rounded-xl text-xs">
+          <span class="text-slate-400">Language:</span>
+          <select id="languageSelect" class="bg-transparent text-slate-200 font-medium focus:outline-none cursor-pointer">
+            <option value="hi-IN" class="bg-slate-900 text-slate-100">Hindi (हिंदी)</option>
+            <option value="en-IN" class="bg-slate-900 text-slate-100">Indian English</option>
+            <option value="bn-IN" class="bg-slate-900 text-slate-100">Bengali (বাংলা)</option>
+            <option value="ta-IN" class="bg-slate-900 text-slate-100">Tamil (தமிழ்)</option>
+            <option value="te-IN" class="bg-slate-900 text-slate-100">Telugu (తెలుగు)</option>
+            <option value="mr-IN" class="bg-slate-900 text-slate-100">Marathi (मराठी)</option>
+            <option value="gu-IN" class="bg-slate-900 text-slate-100">Gujarati (ગુજરાતી)</option>
+            <option value="kn-IN" class="bg-slate-900 text-slate-100">Kannada (ಕನ್ನಡ)</option>
+            <option value="ml-IN" class="bg-slate-900 text-slate-100">Malayalam (മലയാളം)</option>
+            <option value="pa-IN" class="bg-slate-900 text-slate-100">Punjabi (ਪੰਜਾਬੀ)</option>
+            <option value="od-IN" class="bg-slate-900 text-slate-100">Odia (ଓଡ଼ିଆ)</option>
+          </select>
+        </div>
+
+        <!-- Connection Status Badge -->
+        <div id="statusBadge" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+          <span class="text-slate-400">Checking...</span>
+        </div>
+
+        <!-- API Key Settings Button -->
+        <button id="apiKeyBtn" class="flex items-center gap-1.5 px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-indigo-600/20 transition">
+          <span>🔑</span> Settings
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN STUDIO WORKSPACE (3-COLUMN LAYOUT) -->
+  <main class="flex-1 max-w-[1720px] w-full mx-auto p-3 sm:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+    
+    <!-- LEFT PANEL: LIFELIKE AI AVATAR & CONVERSATION DOCK (Col span 4) -->
+    <section class="lg:col-span-4 flex flex-col gap-3.5">
+      
+      <!-- Avatar Canvas Card -->
+      <div class="glass-panel-glow rounded-2xl p-4 flex flex-col items-center relative overflow-hidden">
+        
+        <!-- Tutor Info Badge -->
+        <div class="w-full flex items-center justify-between mb-2 pb-2 border-b border-slate-700/60 z-10">
+          <div>
+            <h2 id="tutorSpeakerName" class="font-bold text-sm text-slate-100">Prof. Priya Sharma</h2>
+            <p id="tutorSpeakerTitle" class="text-[11px] text-sky-400">Senior STEM & Physics Educator</p>
+          </div>
+          <span class="flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live Avatar
+          </span>
+        </div>
+
+        <!-- Canvas Avatar with Visemes & Gestures -->
+        <div class="relative w-full flex items-center justify-center my-1">
+          <canvas id="avatarCanvas" width="400" height="420" class="max-w-full h-auto rounded-xl"></canvas>
+        </div>
+
+        <!-- Tutor Live Subtitles -->
+        <div class="w-full mt-2 p-3 bg-slate-900/90 rounded-xl border border-slate-700/80 shadow-inner">
+          <div class="flex items-center gap-1.5 text-[10px] uppercase font-bold text-indigo-400 tracking-wider mb-1">
+            <span>💬</span> Spoken Explanation (Sarvam Bulbul TTS)
+          </div>
+          <p id="tutorSubtitle" class="text-xs text-slate-200 leading-relaxed font-medium min-h-[44px]">
+            नमस्ते! I am your AI Avatar Tutor. Ask any question via voice or text, or select one of the demonstration topics below!
+          </p>
+        </div>
+      </div>
+
+      <!-- Student Voice & Text Input Dock -->
+      <div class="glass-panel rounded-2xl p-3.5 flex flex-col gap-2.5">
+        
+        <!-- Microphone & Text input bar -->
+        <div class="flex items-center gap-2">
+          
+          <!-- Big Interactive Voice Mic Button -->
+          <button id="micBtn" class="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 transition flex-shrink-0" title="Click to speak in your native language (Sarvam Saaras STT)">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z"></path>
+            </svg>
+          </button>
+
+          <!-- Query Input Field -->
+          <div class="relative flex-1">
+            <input type="text" id="chatInput" placeholder="Ask a question or request a demo..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500">
+          </div>
+
+          <!-- Send Button -->
+          <button id="sendBtn" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold shadow-md transition flex items-center gap-1.5 flex-shrink-0">
+            <span>Send</span> ➔
+          </button>
+        </div>
+
+        <!-- Action Shortcuts & Document Upload -->
+        <div class="flex items-center justify-between gap-2 pt-1">
+          <span class="text-[11px] text-slate-400 font-medium">Quick Topics:</span>
+          
+          <!-- Hidden document file input -->
+          <input type="file" id="docUploadInput" class="hidden" accept=".txt,.pdf,.png,.jpg,.jpeg">
+          <button id="docUploadBtn" class="flex items-center gap-1 text-[11px] text-sky-400 hover:text-sky-300 font-medium bg-sky-500/10 hover:bg-sky-500/20 px-2 py-1 rounded-lg border border-sky-500/30 transition">
+            <span>📎</span> Upload Notes / HW
+          </button>
+        </div>
+
+        <!-- Quick Prompt Pills -->
+        <div class="flex flex-wrap gap-1.5">
+          <button class="quick-prompt-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700 transition" data-prompt="Explain Projectile Motion with physics simulation">
+            🚀 Projectile Motion
+          </button>
+          <button class="quick-prompt-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700 transition" data-prompt="Explain Pythagoras Theorem with geometric proof">
+            📐 Pythagoras Theorem
+          </button>
+          <button class="quick-prompt-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700 transition" data-prompt="Explain Binary Search algorithm with divide and conquer">
+            🔍 Binary Search
+          </button>
+          <button class="quick-prompt-btn px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-[11px] text-slate-300 border border-slate-700 transition" data-prompt="Explain Universal Gravitation and planetary orbits">
+            🪐 Gravity & Orbits
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CENTER PANEL: VISUAL WHITEBOARD & INTERACTIVE SIMULATIONS (Col span 5) -->
+    <section class="lg:col-span-5 flex flex-col gap-3">
+      
+      <!-- Whiteboard Card -->
+      <div class="whiteboard-container flex flex-col h-[680px] overflow-hidden">
+        
+        <!-- Whiteboard Navigation Tabs -->
+        <div class="bg-slate-900/90 border-b border-slate-700 px-4 py-2.5 flex items-center justify-between gap-2 z-10">
+          <div class="flex items-center gap-2">
+            <button id="tabBtnNotes" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white shadow-md transition">
+              📝 Blackboard Notes
+            </button>
+            <button id="tabBtnSim" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+              🚀 Interactive Demo
+            </button>
+            <button id="tabBtnDoc" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+              📄 Document Viewer
+            </button>
+          </div>
+
+          <div class="flex items-center gap-1.5 text-xs text-slate-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Live Synced
+          </div>
+        </div>
+
+        <!-- Views Container -->
+        <div class="relative flex-1 overflow-hidden" id="whiteboardContainer">
+          
+          <!-- View 1: Blackboard Notes & Formulas -->
+          <div id="wbNotesView" class="h-full">
+            <!-- Dynamic notes content will be injected by whiteboard.js -->
+          </div>
+
+          <!-- View 2: Interactive Simulation Container -->
+          <div id="wbSimView" class="h-full hidden">
+            <div id="wbSimContainer" class="h-full">
+              <!-- Dynamic simulation injected here -->
+            </div>
+          </div>
+
+          <!-- View 3: Document Viewer -->
+          <div id="wbDocView" class="h-full hidden">
+            <!-- Uploaded document view injected here -->
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- RIGHT PANEL: SOCRATIC ADAPTIVE QUIZ & PROGRESS TRACKING (Col span 3) -->
+    <section class="lg:col-span-3 flex flex-col gap-3.5">
+      
+      <!-- Adaptive Quiz Card -->
+      <div id="quizContainer" class="glass-panel-glow rounded-2xl p-4 flex flex-col gap-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-700/80">
+          <div class="flex items-center gap-1.5">
+            <span class="text-base">🎯</span>
+            <h3 class="font-bold text-sm text-slate-100">Adaptive Check</h3>
+          </div>
+          <span id="quizDifficulty" class="text-[10px] px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            FOUNDATION
+          </span>
+        </div>
+
+        <p id="quizQuestion" class="text-xs text-slate-200 leading-relaxed font-medium">
+          Loading diagnostic challenge question...
+        </p>
+
+        <!-- Quiz Options -->
+        <div id="quizOptions" class="space-y-2">
+          <!-- Dynamic options injected here -->
+        </div>
+
+        <!-- Hint & Feedback -->
+        <div class="flex items-center justify-between pt-1">
+          <button id="quizHintBtn" class="text-[11px] text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1 transition">
+            <span>💡</span> Need a hint?
+          </button>
+        </div>
+
+        <div id="quizHintBox" class="hidden p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-xs text-amber-200 font-medium"></div>
+        <div id="quizFeedback" class="hidden"></div>
+      </div>
+
+      <!-- Session Progress & Mastery Dashboard -->
+      <div class="glass-panel rounded-2xl p-4 flex flex-col gap-3.5">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-700/80">
+          <div class="flex items-center gap-1.5">
+            <span class="text-base">📊</span>
+            <h3 class="font-bold text-sm text-slate-100">Learning Analytics</h3>
+          </div>
+          <div class="flex items-center gap-1 text-xs text-amber-400 font-bold">
+            <span>🔥</span> <span id="streakCount">1</span> Day Streak
+          </div>
+        </div>
+
+        <!-- Mastery Gauge -->
+        <div class="flex items-center gap-4 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+          <div class="relative w-20 h-20 flex-shrink-0 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 88 88">
+              <circle cx="44" cy="44" r="36" stroke="currentColor" stroke-width="7" fill="transparent" class="text-slate-800"/>
+              <circle id="masteryCircle" cx="44" cy="44" r="36" stroke="currentColor" stroke-width="7" fill="transparent" stroke-dasharray="226.2" stroke-dashoffset="180" stroke-linecap="round" class="text-indigo-500 transition-all duration-700"/>
+            </svg>
+            <span id="masteryScore" class="absolute text-sm font-extrabold text-slate-100">20%</span>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-slate-200">Topic Mastery</div>
+            <p class="text-[11px] text-slate-400 mt-0.5">Calculated adaptively from diagnostic questions and retention.</p>
+          </div>
+        </div>
+
+        <!-- Concepts Mastered Checklist -->
+        <div>
+          <div class="text-[11px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">
+            Mastered Concepts
+          </div>
+          <div id="conceptList" class="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+            <!-- Dynamic checklist -->
+          </div>
+        </div>
+
+        <!-- Export Notes Button -->
+        <button id="exportRecapBtn" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm">
+          <span>📥</span> Export Study Notes (.md)
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- SARVAM API KEY SETTINGS MODAL -->
+  <div id="apiKeyModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🔑</span>
+          <h3 class="font-bold text-base text-slate-100">Configure Sarvam AI API</h3>
+        </div>
+        <button id="closeApiKeyModal" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <p class="text-xs text-slate-300 leading-relaxed">
+        Enter your <strong>Sarvam AI Subscription Key</strong> from the 
+        <a href="https://dashboard.sarvam.ai" target="_blank" class="text-sky-400 underline">Sarvam Developer Dashboard</a>. 
+        This activates high-accuracy Saaras STT, Bulbul TTS, Sarvam-105B Indic LLM, and Mayura Translation.
+      </p>
+
+      <div class="space-y-1">
+        <label class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">API Subscription Key:</label>
+        <input type="password" id="apiKeyInput" placeholder="Enter your api-subscription-key..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-indigo-500">
+      </div>
+
+      <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
+        <div class="font-semibold text-slate-300">Included Models:</div>
+        <div>• <strong>Speech-to-Text:</strong> <code class="text-sky-400">saaras:v4</code></div>
+        <div>• <strong>Text-to-Speech:</strong> <code class="text-amber-400">bulbul:v1</code></div>
+        <div>• <strong>Chat / Socratic Reasoning:</strong> <code class="text-indigo-400">sarvam-105b</code></div>
+        <div>• <strong>Translation:</strong> <code class="text-emerald-400">sarvam-translate:v1</code></div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button id="saveApiKeyBtn" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white font-semibold rounded-xl text-xs shadow-lg transition">
+          Save & Connect
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Controllers -->
+  <script src="/static/js/avatar.js"></script>
+  <script src="/static/js/simulations.js"></script>
+  <script src="/static/js/whiteboard.js"></script>
+  <script src="/static/js/audio.js"></script>
+  <script src="/static/js/app.js"></script>
+
+</body>
+</html>
